@@ -110,7 +110,7 @@ var ClearCache = function (props) {
         });
     }
     function fetchMeta() {
-        fetch("/meta.json", {
+        fetch("/clear-cache", {
             cache: 'no-store'
         })
             .then(function (response) { return response.json(); })

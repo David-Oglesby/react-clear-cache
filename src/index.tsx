@@ -37,7 +37,7 @@ export function useClearCache(props: OwnProps = {}) {
   };
 
   function fetchMeta() {
-    fetch(`/meta.json`, {
+    fetch(`/clear-cache`, {
       cache: 'no-store'
     })
       .then(response => response.json())
