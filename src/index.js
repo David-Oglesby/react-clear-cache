@@ -111,7 +111,12 @@ var ClearCache = function (props) {
     }
     function fetchMeta() {
         fetch("/clear-cache", {
-            cache: 'no-store'
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            cache: 'no-store',
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+            },
         })
             .then(function (response) { return response.json(); })
             .then(function (meta) {
