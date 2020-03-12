@@ -1,139 +1,66 @@
 # react-clear-cache
 
-> A component to manage application updates.
-
-[![NPM](https://img.shields.io/npm/v/react-clear-cache.svg)](https://www.npmjs.com/package/react-clear-cache) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+> A component to manage application updates. Changes made to work with a node/react site with node being in the root and react in the client (or whatever you call it) folder.
 
 ## Demo
 
-See [demo](https://noahjohn9259.github.io/react-clear-cache/)
+1. Install in react folder
+2. Add cd client && node ./node_modules/react-clear-cache/bin/cli.js to node package.json install (i.e. "postinstall": "cd client && node ./node_modules/react-clear-cache/bin/cli.js && npm install && npm install --only=dev --no-shrinkwrap && npm run build")
+3. Add clear-cache route to app.js => app.use('/clear-cache', clearCacheRouter);
+4. Add following route to ClearCacheRoutes.js
+  ```
+  router.route('/').post(WrapAsync.main(async (req, res, next) => { 
+    return res.status("200").send({
+      version:clearCache.version,
+    });
+  }));
+  ```
+5. Update react app.js (or index.js)
+```
+  import { useClearCache } from "react-clear-cache";
+  ...
+  const App = () => {
+    const { isLatestVersion, emptyCacheStorage } = useClearCache({ duration: 600000 }); //every 60 minutes
+    if (!isLatestVersion) {
+      emptyCacheStorage();
+    }
+ ...
+```
+
 
 ## Install
-
-```bash
-$ npm install --save react-clear-cache
-```
+npm install https://github.com/David-Oglesby/react-clear-cache.git
 
 ## Add script in package.json
-
-This will generate `meta.json` file. This will have the version key with the latest build.
-
-```bash
-{
-  "postbuild": "npm run generate-build-meta",
-  "generate-build-meta": "./node_modules/react-clear-cache/bin/cli.js"
-}
-```
 
 ## Usage
 
 ### Using `render props`:
 
-```tsx
-import * as React from "react";
-
-import ClearCache from "react-clear-cache";
-
-const App: React.FC<{}> = () => {
-  return (
-    <div>
-      <ClearCache>
-        {({ isLatestVersion, emptyCacheStorage }) => (
-          <div>
-            {!isLatestVersion && (
-              <p>
-                <a
-                  href="#"
-                  onClick={e => {
-                    e.preventDefault();
-                    emptyCacheStorage();
-                  }}
-                >
-                  Update version
-                </a>
-              </p>
-            )}
-          </div>
-        )}
-      </ClearCache>
-    </div>
-  );
-};
-
-export default App;
-```
-
 ### Using `hooks`:
-
-```tsx
-import * as React from "react";
-
-import { useClearCache } from "react-clear-cache";
-
-const App: React.FC<{}> = () => {
-  const { isLatestVersion, emptyCacheStorage } = useClearCache();
-  return (
-    <div>
-      {!isLatestVersion && (
-        <p>
-          <a
-            href="#"
-            onClick={e => {
-              e.preventDefault();
-              emptyCacheStorage();
-            }}
-          >
-            Update version
-          </a>
-        </p>
-      )}
-    </div>
-  );
-};
-
-export default App;
-```
 
 ## Props
 
 ### `duration`: number
 
-You can set the duration when to fetch for new updates.
-
 ### `auto`: boolean
-
-Set to true to auto-reload the page whenever an update is available.
 
 ## Render props
 
 ### `loading`: boolean
 
-A boolean that indicates whether the request is in flight
-
 ### `isLatestVersion`: boolean
-
-A boolean that indicates if the user has the latest version.
 
 ### `emptyCacheStorage`: () => void
 
-This function empty the CacheStorage and reloads the page.
-
 ## Contributors
-
-1. [noahjohn9259](https://github.com/noahjohn9259)
 
 ## License
 
-MIT © [noahjohn9259](https://github.com/noahjohn9259)
+MIT © [David-Oglesby](https://github.com/David-Oglesby)
 
 ## Development
 
-1. In package.json, set `main` to `src/index.js`.
-
-2. Run `npm start` in root directory. It will build and watch if there are changes made.
-
-3. `cd example` and run `npm start`. It will run the demo application.
-
 ## Note
 
-If you are done making changes, reset `main` to `dist/index.js` in package.json.
+This is not setup to work with other projects. Try to get https://github.com/noahjohn9259/react-clear-cache to work first. But if you have a react/node site and have trouble getting it to work, send me a message if you need help.
